@@ -13,7 +13,7 @@ include 'header.php';
                 <th>Data ID</th>
                 <th>Nama Petugas</th>
                 <th>Tanggal Input</th>
-                <th>Aksi</th>
+                <th>Aksi </th>
             </tr>
         </thead>
         <tbody>
