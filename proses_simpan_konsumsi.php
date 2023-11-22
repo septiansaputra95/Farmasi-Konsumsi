@@ -3,6 +3,7 @@
 require 'vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class ProsesSimpanKonsumsi
 {
@@ -16,15 +17,19 @@ class ProsesSimpanKonsumsi
     public function simpanKonsumsi($namaPetugas, $fileUpload)
     {
 
-        $dataId = $this->generateUniqueId();
+        $dataId = date('Ymd').''.rand(100, 10000);
         $tanggal = date('Y-m-d');
-
+        // var_dump($fileUpload);die();
     
-        $this->simpanHeader($dataId, $namaPetugas, $tanggal);
+        //$this->simpanHeader($dataId, $namaPetugas, $tanggal);
         
         // Import data dari Excel
+        var_dump($fileUpload['tmp_name']);die();
         $importedData = $this->importDataFromExcel($fileUpload['tmp_name']);
-        $this->simpanDetail($dataId, $fileUpload);
+        die();
+
+
+        //$this->simpanDetail($dataId, $fileUpload);
     }
 
     private function generateUniqueId()

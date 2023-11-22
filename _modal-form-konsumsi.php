@@ -17,7 +17,7 @@
                     </div>
                     <div class="form-group">
                         <label for="fileUpload">File Upload:</label>
-                        <input type="file" class="form-control" id="file-Upload" name="file_Upload" accept=".pdf, .doc, .docx" required>
+                        <input type="file" class="form-control" id="file-Upload" name="file_Upload" accept=".xls, .xlsx" required>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModalBtn">Close</button>
