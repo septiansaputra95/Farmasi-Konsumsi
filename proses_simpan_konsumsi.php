@@ -93,7 +93,8 @@ class ProsesSimpanKonsumsi
 
         // Convert the active sheet to an array
         $dataArray = $activeSheet->toArray();
-
+        //echo '<br>'.substr($dataArray[2][5], 0,2);die;
+         
         //var_dump($dataArray[1]);die();
         // $sql = "
         //     INSERT INTO pharmacy_consumption(*)
@@ -169,7 +170,7 @@ class ProsesSimpanKonsumsi
         )
     ";
         $stmt = $this->pdo->prepare("
-        INSERT INTO pharmacy_consumption_copy1(
+        INSERT INTO pharmacy_consumption(
             data_id, 
             document_no, 
             consumed_date, 
@@ -180,9 +181,10 @@ class ProsesSimpanKonsumsi
             patient_name, 
             gender, 
             admitting_doctor, 
-            tanggalinput
+            tanggalinput,
+            visit_type
             ) VALUES 
-            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
         // $stmt = $this->pdo->prepare("
         // INSERT INTO pharmacy_consumption
@@ -252,7 +254,8 @@ class ProsesSimpanKonsumsi
                 // $dataArray[$i][25],
                 // $dataArray[$i][26],
                 // $dataArray[$i][27],
-                $tanggal
+                $tanggal,
+                substr($dataArray[$i][5], 0,2)
             ];
             
             $query_execute = $stmt->execute($data);
@@ -281,7 +284,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Simpan konsumsi
     $handler->simpanKonsumsi($namaPetugas, $fileTmp, $fileName);
 
-    // Setelah berhasil menyimpan, bisa diarahkan ke halaman lain atau memberikan respons sesuai kebutuhan
+     // Redirect ke halaman index.php dengan notifikasi
+     header("Location: index.php?success=1");
+     exit();
     echo "Data berhasil disimpan!";
 } else {
     // Jika bukan metode POST, berikan respons sesuai kebutuhan
