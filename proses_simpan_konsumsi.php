@@ -14,7 +14,7 @@ class ProsesSimpanKonsumsi
         $this->pdo = $pdo;
     }
 
-    public function simpanKonsumsi($namaPetugas, $fileTmp, $fileName)
+    public function simpanKonsumsi($namaPetugas, $fileTmp, $fileName, $konsumsiTanggal)
     {
 
         $tanggal = date('Y-m-d');
@@ -24,7 +24,7 @@ class ProsesSimpanKonsumsi
         $this->uploadFiles($uniqueFileName, $fileTmp);
 
         // Simpan Header Data
-        $this->simpanHeader($uniqueFileName, $namaPetugas, $tanggal);
+        $this->simpanHeader($uniqueFileName, $namaPetugas, $tanggal, $konsumsiTanggal);
         
         // Simpan data excell ke Database
         $this->simpanDetail($uniqueFileName, $tanggal);
@@ -35,10 +35,13 @@ class ProsesSimpanKonsumsi
         return uniqid();
     }
 
-    private function simpanHeader($dataId, $namaPetugas, $tanggal)
+    private function simpanHeader($dataId, $namaPetugas, $tanggal, $konsumsiTanggal)
     {
-        $stmtHeader = $this->pdo->prepare("INSERT INTO pharmacy_consumption_header (data_id, nama_petugas, tanggal) VALUES (?, ?, ?)");
-        $stmtHeader->execute([$dataId, $namaPetugas, $tanggal]);
+        $dataArray = $this->loadFiles($dataId, $tanggal);
+        $nilaibaris1kolom1 = $dataArray[1][1];
+        //var_dump($dataArray[1][0]);die();
+        $stmtHeader = $this->pdo->prepare("INSERT INTO pharmacy_consumption_header (data_id, nama_petugas, tanggal, konsumsi_tanggal) VALUES (?, ?, ?, ?)");
+        $stmtHeader->execute([$dataId, $namaPetugas, $tanggal, $konsumsiTanggal]);
     }
 
     public function importDataFromExcel($filePath)
@@ -75,6 +78,26 @@ class ProsesSimpanKonsumsi
 
     }
 
+    public function loadFiles($uniqueFileName, $tanggal)
+    {
+        $inputFileName = './uploads/'.$uniqueFileName.'.xls';
+
+        // Identify the type of $inputFileName
+        $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+
+        // Create a new Reader of the type that has been identified
+        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+
+        // Load $inputFileName to a Spreadsheet Object
+        $spreadsheet = $reader->load($inputFileName);
+
+        // Get the active sheet
+        $activeSheet = $spreadsheet->getActiveSheet();
+
+        // Convert the active sheet to an array
+        return $dataArray = $activeSheet->toArray();
+    }
+
     public function simpanDetail($uniqueFileName, $tanggal)
     {
         $inputFileName = './uploads/'.$uniqueFileName.'.xls';
@@ -94,62 +117,6 @@ class ProsesSimpanKonsumsi
         // Convert the active sheet to an array
         $dataArray = $activeSheet->toArray();
         //echo '<br>'.substr($dataArray[2][5], 0,2);die;
-         
-        //var_dump($dataArray[1]);die();
-        // $sql = "
-        //     INSERT INTO pharmacy_consumption(*)
-        //     VALUES (
-        //         data_id
-        //         document_no
-        //         consumed_date
-        //         department
-        //         storename
-        //         mrn
-        //         visit_no
-        //         patient_name
-        //         gender
-        //         admitting_doctor
-        //         treating_doctor
-        //         document_type
-        //         item_type
-        //         item_category
-        //         item_code
-        //         item_name
-        //         batch_no
-        //         qty
-        //         uom
-        //         cost_rate
-        //         cost_value
-        //         sales_rate
-        //         discount_amount
-        //         net_sale_value
-        //         tax_amount
-        //         sales_value
-        //         vendor
-        //         tanggalinput
-
-        //     )
-        // ";
-
-        // $sql = "
-        //     INSERT INTO pharmacy_consumption(
-        //         data_id,
-        //         document_no,
-        //         consumed_date,
-        //         department,
-        //         storename,
-        //         tanngalinput
-        //     )
-        //     VALUES (
-        //         :data_id,
-        //         :document_no,
-        //         :consumed_date,
-        //         :department,
-        //         :storename,
-        //         :tanggalinput
-
-        //     )
-        // ";
 
         $sql = "
         INSERT INTO pharmacy_consumption(
@@ -186,40 +153,7 @@ class ProsesSimpanKonsumsi
             ) VALUES 
             (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
-        // $stmt = $this->pdo->prepare("
-        // INSERT INTO pharmacy_consumption
-        // (
-        //     data_id, 
-        //     document_no, 
-        //     consumed_date, 
-        //     department, 
-        //     storename,
-        //     mrn,
-        //     visit_no,
-        //     patient_name,
-        //     gender,
-        //     admitting_doctor,
-        //     treating_doctor,
-        //     document_type,
-        //     item_type,
-        //     item_category,
-        //     item_code,
-        //     item_name,
-        //     batch_no,
-        //     qty,
-        //     uom,
-        //     cost_rate,
-        //     cost_value,
-        //     sales_rate,
-        //     discount_amount,
-        //     net_sale_value,
-        //     tax_amount,
-        //     sales_value,
-        //     vendor, 
-        //     tanggalinput
-        // ) VALUES 
-        // (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        // ");
+        
         
 
         for($i=1; $i<count($dataArray); $i++){
@@ -234,26 +168,7 @@ class ProsesSimpanKonsumsi
                 $dataArray[$i][5],
                 $dataArray[$i][6],
                 $dataArray[$i][7],
-                //$dataArray[$i][8],
                 $dataArray[$i][9],
-                // $dataArray[$i][10],
-                // $dataArray[$i][11],
-                // $dataArray[$i][12],
-                // $dataArray[$i][13],
-                // $dataArray[$i][14],
-                // $dataArray[$i][15],
-                // $dataArray[$i][16],
-                // //$dataArray[$i][17],
-                // $dataArray[$i][18],
-                // $dataArray[$i][19],
-                // $dataArray[$i][20],
-                // $dataArray[$i][21],
-                // $dataArray[$i][22],
-                // $dataArray[$i][23],
-                // $dataArray[$i][24],
-                // $dataArray[$i][25],
-                // $dataArray[$i][26],
-                // $dataArray[$i][27],
                 $tanggal,
                 substr($dataArray[$i][5], 0,2)
             ];
@@ -277,12 +192,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Dapatkan nama file dan path sementara pada server
     $fileTmp = $_FILES['file_Upload']['tmp_name'];
     $fileName = $_FILES['file_Upload']['name'];
-
+    $konsumsiTanggal = $_POST['konsumsi_tanggal'];
     // Upload Files
     // $handler->uploadFiles($fileTmp, $fileName);
 
     // Simpan konsumsi
-    $handler->simpanKonsumsi($namaPetugas, $fileTmp, $fileName);
+    $handler->simpanKonsumsi($namaPetugas, $fileTmp, $fileName, $konsumsiTanggal);
 
      // Redirect ke halaman index.php dengan notifikasi
      header("Location: index.php?success=1");

@@ -16,6 +16,10 @@
                         <input type="text" class="form-control" id="nama-Petugas" name="nama_Petugas" required>
                     </div>
                     <div class="form-group">
+                        <label for="konsumsiTanggal">Konsumsi Tanggal:</label>
+                        <input type="date" class="form-control" id="konsumsi-tanggal" name="konsumsi_tanggal" required>
+                    </div>
+                    <div class="form-group">
                         <label for="fileUpload">File Upload:</label>
                         <input type="file" class="form-control" id="file-Upload" name="file_Upload" accept=".xls, .xlsx" required>
                     </div>

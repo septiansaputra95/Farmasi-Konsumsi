@@ -21,9 +21,11 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
         <thead>
             <tr>
                 <th>Data ID</th>
+                <th>Konsumsi Tanggal</th>
                 <th>Nama Petugas</th>
                 <th>Tanggal Input</th>
-                <th>Aksi </th>
+                <th>Aksi Resep</th>
+                <th>Aksi Sub Resep</th>
             </tr>
         </thead>
         <tbody>
@@ -48,25 +50,23 @@ include 'script.js';
 <!-- JavaScript untuk menampilkan modal secara otomatis -->
 <script>
     $(document).ready(function () {
-        // $('#modalKeteranganFarmasi').modal('show');
-        
-        // $("#tambah-data").click(function(){
-        //     $('#modalKeteranganFarmasi').modal('show');
-        // });
-
-        // $('#tutupKeterangan').click(function () {
-        //     $('#modalKeteranganFarmasi').modal('hide');
-        // });
-        
+         
         $("#tambah-data").click(function(){
-                $('#modalFormKonsumsi').modal('show');
-            });
+            $('#modalFormKonsumsi').modal('show');
+        });
 
-            $('#closeModalBtn').click(function () {
-                $('#modalFormKonsumsi').modal('hide');
-            });
-            
-            $('#tabel-konsumsi tbody').on('click', '.btn-generate', function () {
+        $('#closeModalBtn').click(function () {
+            $('#modalFormKonsumsi').modal('hide');
+        });
+
+        $('#tabel-konsumsi tbody').on('click', '.btn-generateResep', function () {
+            var dataId = $(this).data('id');
+
+            // Memanggil fungsi khusus untuk generate dengan AJAX
+            generateDataResep(dataId);
+        });
+        
+        $('#tabel-konsumsi tbody').on('click', '.btn-generate', function () {
             var dataId = $(this).data('id');
 
             // Memanggil fungsi khusus untuk generate dengan AJAX
@@ -74,15 +74,31 @@ include 'script.js';
         });
 
         // Fungsi untuk generate data dengan AJAX
-        function generateData(data_id) {
-            console.log('Data ID yang dikirim:', data_id);
+        function generateDataResep(data_id) {
+            console.log('Data ID yang dikirim Resep:', data_id);
             $.ajax({
                 type: 'POST',
                 url: 'proses_generate_data.php',
-                data: {data_id: data_id},
+                data: {data_id: data_id, action: 'Resep'}, // Tambahkan parameter actio
+                //data: {data_id: data_id},
                 success: function (response) {
-                    // Menampilkan hasil generate dalam alert
-                    //console.log(response);
+                    alert(response);
+                },
+                error: function () {
+                    alert('Terjadi kesalahan saat mencoba generate data.');
+                }
+            });
+        }
+        
+        // Fungsi untuk generate data dengan AJAX
+        function generateData(data_id) {
+            console.log('Data ID yang dikirim Sub Resep:', data_id);
+            $.ajax({
+                type: 'POST',
+                url: 'proses_generate_data.php',
+                data: {data_id: data_id, action: 'SubResep'}, // Tambahkan parameter actio
+                //data: {data_id: data_id},
+                success: function (response) {
                     alert(response);
                 },
                 error: function () {
