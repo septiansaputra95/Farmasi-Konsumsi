@@ -14,9 +14,10 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
 
 <div class="container mt-5">
     <h2>Data Konsumsi</h2>
-    <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#modalFormKonsumsi" id="tambah-data">Tambah Data</button>
+    <!--<button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#modalFormKonsumsi" id="tambah-data">Tambah Data</button> -->
     <!-- <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#modalKeteranganFarmasi" id="tambah">Tambah ce</button> -->
     <?php echo $successMessage; ?>
+    <h4> Di Tunggu Jam 08.15, Data Akan diupdate oleh Petugas Snake Man </h4>	
     <table class="table" id="tabel-konsumsi">
         <thead>
             <tr>

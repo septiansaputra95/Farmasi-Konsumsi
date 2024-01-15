@@ -2,7 +2,7 @@
 
 $host = '10.33.111.2';
 $port = '5432'; // Port default PostgreSQL
-$dbname = 'data_hinai_pekalongan'; // Ganti dengan nama database yang sesuai
+$dbname = 'data_simpel'; // Ganti dengan nama database yang sesuai
 $username = 'postgres';
 $password = 'p0stgr3s#33';
 
